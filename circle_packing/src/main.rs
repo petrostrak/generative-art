@@ -5,11 +5,19 @@ const MIN_RADIUS: f32 = 2.0;
 const MAX_RADIUS: f32 = 500.0;
 const N_CIRCLES: usize = 50;
 
+struct Model;
+
 fn main() {
-    nannou::sketch(view).run();
+    nannou::app(model).run();
 }
 
-fn view(app: &App, frame: Frame) {
+fn model(app: &App) -> Model {
+    app.set_loop_mode(LoopMode::loop_once());
+    let _window = app.new_window().view(view).build().unwrap();
+    Model
+}
+
+fn view(app: &App, _model: &Model, frame: Frame) {
     let window = app.window_rect();
     // get canvas to draw on
     let draw = app.draw();
