@@ -8,6 +8,26 @@ const N_CIRCLES: usize = 1500;
 
 struct Model;
 
+struct Circle {
+    x: f32,
+    y: f32,
+    radius: f32,
+}
+
+impl Circle {
+    fn collides(&self, other: Circle) -> bool {
+        let a = self.radius + other.radius;
+        let x = self.x - other.x;
+        let y = self.y - other.y;
+
+        if a >= ((x * x) + (y * y)).sqrt() {
+            true
+        } else {
+            false
+        }
+    }
+}
+
 fn main() {
     nannou::app(model).run();
 }
