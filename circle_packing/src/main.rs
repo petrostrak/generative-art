@@ -1,10 +1,11 @@
+use nannou::color::{POWDERBLUE, WHITESMOKE};
 use nannou::prelude::*;
 
 const LINE_WIDTH: f32 = 2.0;
 const MIN_RADIUS: f32 = 2.0;
-const MAX_RADIUS: f32 = 5.0;
-const N_CIRCLES: usize = 1500;
-// const CREATE_CIRCLE_ATTEMPTS: usize = 500;
+const MAX_RADIUS: f32 = 385.0;
+const N_CIRCLES: usize = 3000;
+const CREATE_CIRCLE_ATTEMPTS: usize = 500;
 
 struct Model;
 
@@ -55,25 +56,45 @@ fn view(app: &App, _model: &Model, frame: Frame) {
     // set background to blue
     draw.background().color(WHITE);
 
-    for _ in 0..=N_CIRCLES {
-        let x = random_range(window.left(), window.right());
-        let y = random_range(window.top(), window.bottom());
-        let radius = random_range(MIN_RADIUS, MAX_RADIUS);
+    let mut circles: Vec<Circle> = Vec::with_capacity(N_CIRCLES);
 
+    for _ in 0..=N_CIRCLES {
+        for _attempt in 0..=CREATE_CIRCLE_ATTEMPTS {
+            let x = random_range(window.left(), window.right());
+            let y = random_range(window.top(), window.bottom());
+            let radius = random_range(MIN_RADIUS, MAX_RADIUS);
+
+            let c = Circle {
+                x: x,
+                y: y,
+                radius: radius,
+            };
+
+            if c.any_collision(&circles) {
+                continue;
+            }
+
+            circles.push(c);
+            break;
+        }
+    }
+
+    for circle in circles {
         let line_points = (0..=360).map(|i| {
+            // Convert each degree to radians.
             let radian = deg_to_rad(i as f32);
-            let x_ = x + radian.sin() + radius;
-            let y_ = y + radian.cos() + radius;
+            // Get the sine of the radian to find the x co-ordinate of this point of the circle
+            // and multiply it by the radius.
+            let x_ = circle.x + radian.sin() * circle.radius;
+            // Do the same with cosine to find the y co-ordinate.
+            let y_ = circle.y + radian.cos() * circle.radius;
+            // Construct and return a point object with a color.
             (pt2(x_, y_), BLACK)
         });
-
-        draw.ellipse().w_h(radius, radius).x_y(x, y).color(GRAY);
 
         draw.polyline()
             .weight(LINE_WIDTH)
             .points_colored(line_points);
     }
-
-    // put everything on the frame
     draw.to_frame(app, &frame).unwrap();
 }
