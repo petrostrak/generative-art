@@ -2,8 +2,9 @@ use nannou::prelude::*;
 
 // const LINE_WIDTH: f32 = 2.0;
 const MIN_RADIUS: f32 = 2.0;
-const MAX_RADIUS: f32 = 500.0;
-const N_CIRCLES: usize = 50;
+const MAX_RADIUS: f32 = 120.0;
+const N_CIRCLES: usize = 100;
+// const CREATE_CIRCLE_ATTEMPTS: usize = 10;
 
 struct Model;
 
@@ -28,12 +29,16 @@ fn view(app: &App, _model: &Model, frame: Frame) {
     let points = (0..=N_CIRCLES).map(|_| {
         let x = random_range(window.left(), window.right());
         let y = random_range(window.top(), window.bottom());
+        let radius = random_range(MIN_RADIUS, MAX_RADIUS);
 
-        (pt2(x, y), WHITE)
+        (pt2(x, y), radius, WHITE)
     });
 
-    for (point, color) in points {
-        draw.ellipse().color(color).x_y(point.x, point.y);
+    for (point, radius, color) in points {
+        draw.ellipse()
+            .w_h(radius, radius)
+            .x_y(point.x, point.y)
+            .color(color);
     }
 
     // put everything on the frame
