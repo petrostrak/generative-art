@@ -1,5 +1,6 @@
 [workspace]
 members = [
-    "circle_packing"
+    "circle_packing",
+    "piet_mondrian",
 ]
 resolver="2"
