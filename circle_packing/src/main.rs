@@ -1,4 +1,3 @@
-use nannou::color::{POWDERBLUE, WHITESMOKE};
 use nannou::prelude::*;
 
 const LINE_WIDTH: f32 = 2.0;
@@ -50,13 +49,11 @@ fn model(app: &App) -> Model {
 
 fn view(app: &App, _model: &Model, frame: Frame) {
     let window = app.window_rect();
-    // get canvas to draw on
     let draw = app.draw();
 
-    // set background to blue
     draw.background().color(WHITE);
 
-    let mut circles: Vec<Circle> = Vec::with_capacity(N_CIRCLES);
+    let mut circles = Vec::<Circle>::with_capacity(N_CIRCLES);
 
     for _ in 0..=N_CIRCLES {
         for _attempt in 0..=CREATE_CIRCLE_ATTEMPTS {
