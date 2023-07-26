@@ -26,6 +26,15 @@ impl Circle {
             false
         }
     }
+
+    fn any_collision(&self, others: &Vec<Circle>) -> bool {
+        for other in &others {
+            if self.collides(other) {
+                return true;
+            }
+        }
+        false
+    }
 }
 
 fn main() {
