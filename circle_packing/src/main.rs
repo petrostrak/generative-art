@@ -15,7 +15,7 @@ struct Circle {
 }
 
 impl Circle {
-    fn collides(&self, other: Circle) -> bool {
+    fn collides(&self, other: &Circle) -> bool {
         let a = self.radius + other.radius;
         let x = self.x - other.x;
         let y = self.y - other.y;
@@ -28,7 +28,7 @@ impl Circle {
     }
 
     fn any_collision(&self, others: &Vec<Circle>) -> bool {
-        for other in &others {
+        for other in others {
             if self.collides(other) {
                 return true;
             }
