@@ -2,5 +2,6 @@
 members = [
     "circle_packing",
     "piet_mondrian",
+    "cubic_disarray",
 ]
 resolver="2"
