@@ -27,12 +27,19 @@ impl Circle {
         }
     }
 
-    fn any_collision(&self, others: &Vec<Circle>) -> bool {
+    fn any_collision(&self, others: &Vec<Circle>, window: Rect) -> bool {
         for other in others {
             if self.collides(other) {
                 return true;
             }
         }
+        if self.x + self.radius >= window.right() || self.x - self.radius <= window.left() {
+            return true;
+        }
+        if self.y + self.radius >= window.top() || self.y - self.radius <= window.bottom() {
+            return true;
+        }
+
         false
     }
 }
@@ -43,13 +50,17 @@ fn main() {
 
 fn model(app: &App) -> Model {
     app.set_loop_mode(LoopMode::loop_once());
-    let _window = app.new_window().view(view).build().unwrap();
+    let _window = app.new_window().size(500, 500).view(view).build().unwrap();
     Model
 }
 
 fn view(app: &App, _model: &Model, frame: Frame) {
     let window = app.window_rect();
     let draw = app.draw();
+    println!("{:?}", window.x.len());
+    println!("{:?}", window.y.len());
+    println!("{:?}", window.top());
+    println!("{:?}", window.right());
 
     draw.background().color(WHITE);
 
@@ -67,7 +78,7 @@ fn view(app: &App, _model: &Model, frame: Frame) {
                 radius: radius,
             };
 
-            if c.any_collision(&circles) {
+            if c.any_collision(&circles, window) {
                 continue;
             }
 
