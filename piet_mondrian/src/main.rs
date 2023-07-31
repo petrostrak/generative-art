@@ -11,7 +11,7 @@ fn main() {
 
 fn model(app: &App) -> Model {
     app.set_loop_mode(LoopMode::loop_once());
-    let _window = app.new_window().size(500, 500).view(view).build().unwrap();
+    let _window = app.new_window().size(320, 320).view(view).build().unwrap();
     Model
 }
 
@@ -58,19 +58,17 @@ fn view(app: &App, _model: &Model, frame: Frame) {
 }
 
 fn split_squares_with(x: f32, y: f32, rectangles: &mut Vec<Rectangle>) {
-    for i in rectangles.len() - 1..=0 {
+    for i in (0..rectangles.len()).rev() {
         let rectangle = rectangles[i];
         if x > 0.0 && x > rectangle.x && x < rectangle.x + rectangle.width {
             let rng = rand::thread_rng().gen_range(0.0..1.0);
             if rng > 0.5 {
-                // rectangles.remove(i);
                 split_on_x(rectangle, x, rectangles);
             }
         }
         if y > 0.0 && y > rectangle.y && y < rectangle.y + rectangle.height {
             let rng = rand::thread_rng().gen_range(0.0..1.0);
             if rng > 0.5 {
-                // rectangles.remove(i);
                 split_on_y(rectangle, y, rectangles);
             }
         }
