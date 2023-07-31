@@ -24,6 +24,8 @@ struct Rectangle {
 fn view(app: &App, _model: &Model, frame: Frame) {
     let window = app.window_rect();
     let draw = app.draw();
+    let size = (window.len() - LINE_WIDTH) as i32;
+    let step = (window.len() - LINE_WIDTH) / 6.0;
 
     draw.background().color(WHITE);
 
@@ -35,6 +37,11 @@ fn view(app: &App, _model: &Model, frame: Frame) {
         height: window.len() - LINE_WIDTH,
     };
     rectangles.push(rect);
+
+    for i in (0..=size).step_by(step as usize) {
+        split_squares_with(i as f32, 0.0, &mut rectangles);
+        split_squares_with(0.0, i as f32, &mut rectangles);
+    }
 
     for rectangle in rectangles {
         draw.rect()
