@@ -57,10 +57,6 @@ fn model(app: &App) -> Model {
 fn view(app: &App, _model: &Model, frame: Frame) {
     let window = app.window_rect();
     let draw = app.draw();
-    println!("{:?}", window.x.len());
-    println!("{:?}", window.y.len());
-    println!("{:?}", window.top());
-    println!("{:?}", window.right());
 
     draw.background().color(WHITE);
 
@@ -72,11 +68,7 @@ fn view(app: &App, _model: &Model, frame: Frame) {
             let y = random_range(window.top(), window.bottom());
             let radius = random_range(MIN_RADIUS, MAX_RADIUS);
 
-            let c = Circle {
-                x: x,
-                y: y,
-                radius: radius,
-            };
+            let c = Circle { x, y, radius };
 
             if c.any_collision(&circles, window) {
                 continue;
@@ -89,14 +81,10 @@ fn view(app: &App, _model: &Model, frame: Frame) {
 
     for circle in circles {
         let line_points = (0..=360).map(|i| {
-            // Convert each degree to radians.
             let radian = deg_to_rad(i as f32);
-            // Get the sine of the radian to find the x co-ordinate of this point of the circle
-            // and multiply it by the radius.
             let x_ = circle.x + radian.sin() * circle.radius;
-            // Do the same with cosine to find the y co-ordinate.
             let y_ = circle.y + radian.cos() * circle.radius;
-            // Construct and return a point object with a color.
+
             (pt2(x_, y_), BLACK)
         });
 
