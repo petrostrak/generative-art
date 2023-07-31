@@ -1,4 +1,7 @@
-use nannou::prelude::*;
+use nannou::{
+    prelude::*,
+    rand::{self, Rng},
+};
 
 const LINE_WIDTH: f32 = 8.0;
 
@@ -55,7 +58,26 @@ fn view(app: &App, _model: &Model, frame: Frame) {
     draw.to_frame(app, &frame).unwrap();
 }
 
-fn split_squares_with(x: f32, y: f32, rectangles: &mut Vec<Rectangle>) {}
+fn split_squares_with(x: f32, y: f32, rectangles: &mut Vec<Rectangle>) {
+    for (index, rectangle) in rectangles.into_iter().enumerate().rev() {
+        if x > 0.0 && x > rectangle.x && x < rectangle.x + rectangle.width {
+            let mut rng = rand::thread_rng();
+            if rng.gen_range(0.0..1.0) > 0.5 {
+                rectangles.remove(index);
+                split_on_x(rectangle, x, rectangles);
+            }
+        }
+        if y > 0.0 && y > rectangle.y && y < rectangle.y + rectangle.height {
+            if x > 0.0 && x > rectangle.x && x < rectangle.x + rectangle.width {
+                let mut rng = rand::thread_rng();
+                if rng.gen_range(0.0..1.0) > 0.5 {
+                    rectangles.remove(index);
+                    split_on_y(rectangle, y, rectangles);
+                }
+            }
+        }
+    }
+}
 
 fn split_on_x(rectangle: &Rectangle, split_at: f32, rectangles: &mut Vec<Rectangle>) {
     let rectangle_a = Rectangle {
