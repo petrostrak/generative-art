@@ -47,3 +47,43 @@ fn view(app: &App, _model: &Model, frame: Frame) {
 
     draw.to_frame(app, &frame).unwrap();
 }
+
+fn split_squares_with(x: f32, y: f32, rectangles: &mut Vec<Rectangle>) {}
+
+fn split_on_x(rectangle: &Rectangle, split_at: f32, rectangles: &mut Vec<Rectangle>) {
+    let rectangle_a = Rectangle {
+        x: rectangle.x,
+        y: rectangle.y,
+        width: rectangle.width - (rectangle.width - split_at + rectangle.x),
+        height: rectangle.height,
+    };
+
+    let rectangle_b = Rectangle {
+        x: split_at,
+        y: rectangle.y,
+        width: rectangle.width - split_at + rectangle.x,
+        height: rectangle.height,
+    };
+
+    rectangles.push(rectangle_a);
+    rectangles.push(rectangle_b);
+}
+
+fn split_on_y(rectangle: &Rectangle, split_at: f32, rectangles: &mut Vec<Rectangle>) {
+    let rectangle_a = Rectangle {
+        x: rectangle.x,
+        y: rectangle.y,
+        width: rectangle.width,
+        height: rectangle.height - (rectangle.height - split_at + rectangle.y),
+    };
+
+    let rectangle_b = Rectangle {
+        x: rectangle.x,
+        y: split_at,
+        width: rectangle.width,
+        height: rectangle.height - split_at + rectangle.y,
+    };
+
+    rectangles.push(rectangle_a);
+    rectangles.push(rectangle_b);
+}
