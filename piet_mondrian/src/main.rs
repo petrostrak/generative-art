@@ -1,7 +1,6 @@
-use mondrian::{save, Mondrian};
+use svg::save;
 
 fn main() {
-    let mut s = Mondrian::default();
-    s.line_width = 0.8;
-    save("iter-5.svg", &s.generate(4)).unwrap();
+    let mut s = piet_mondrian::Mondrian::default();
+    save("piet_mondrian.svg", &s.generate(5)).unwrap();
 }
