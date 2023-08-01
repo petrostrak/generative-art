@@ -16,7 +16,7 @@ fn model(app: &App) -> Model {
 }
 
 #[derive(Clone, Copy, Debug)]
-struct Rectangle {
+struct Square {
     x: f32,
     y: f32,
     width: f32,
@@ -26,33 +26,33 @@ struct Rectangle {
 fn view(app: &App, _model: &Model, frame: Frame) {
     let window = app.window_rect();
     let size = window.len();
-    let draw = app.draw().x_y(-window.w() * 0.41, -window.h() * 0.41);
+    let draw = app.draw();
 
     let step = size / 6.0;
 
     draw.background().color(WHITE);
 
-    let mut rectangles = Vec::<Rectangle>::new();
-    let rect = Rectangle {
+    let mut squares = Vec::<Square>::new();
+    let sq = Square {
         x: 0.0,
         y: 0.0,
         width: size,
         height: size,
     };
-    rectangles.push(rect);
+    squares.push(sq);
+    println!("Initial square: {:?}", sq);
 
     for i in (0..size as usize).step_by(step as usize) {
-        split_squares_with(0.0, i as f32, &mut rectangles);
-        split_squares_with(i as f32, 0.0, &mut rectangles);
+        split_squares_with(0.0, i as f32, &mut squares);
+        split_squares_with(i as f32, 0.0, &mut squares);
     }
 
-    for rectangle in rectangles {
-        println!("{:?}", rectangle);
+    for square in squares {
+        println!("{:?}", square);
         draw.rect()
             .no_fill()
-            .x(rectangle.x)
-            .y(rectangle.y)
-            .w_h(rectangle.width, rectangle.height)
+            .x_y(square.x, square.y)
+            .w_h(square.width, square.height)
             .stroke_weight(LINE_WIDTH)
             .stroke(BLACK);
     }
@@ -60,58 +60,54 @@ fn view(app: &App, _model: &Model, frame: Frame) {
     draw.to_frame(app, &frame).unwrap();
 }
 
-fn split_squares_with(x: f32, y: f32, rectangles: &mut Vec<Rectangle>) {
-    for i in (0..rectangles.len()).rev() {
-        let rectangle = rectangles[i];
-        if x > 0.0 && x > rectangle.x && x < rectangle.x + rectangle.width {
-            // let rng = rand::thread_rng().gen_range(0.0..1.0);
-            // if rng > 0.5 {
-            rectangles.splice(i..i, split_on_x(rectangle, x));
-            rectangles.remove(i + 2);
-            // }
+fn split_squares_with(x: f32, y: f32, squares: &mut Vec<Square>) {
+    for i in (0..squares.len()).rev() {
+        let square = squares[i];
+        if x > 0.0 && x > square.x && x < square.x + square.width {
+            if rand::thread_rng().gen_range(0.0..1.0) > 0.5 {
+                squares.splice(i..i + 1, split_on_x(square, x));
+            }
         }
-        if y > 0.0 && y > rectangle.y && y < rectangle.y + rectangle.height {
-            // let rng = rand::thread_rng().gen_range(0.0..1.0);
-            // if rng > 0.5 {
-            rectangles.splice(i..i, split_on_y(rectangle, y));
-            rectangles.remove(i + 2);
-            // }
+        if y > 0.0 && y > square.y && y < square.y + square.height {
+            if rand::thread_rng().gen_range(0.0..1.0) > 0.5 {
+                squares.splice(i..i + 1, split_on_y(square, y));
+            }
         }
     }
 }
 
-fn split_on_x(rectangle: Rectangle, split_at: f32) -> Vec<Rectangle> {
-    let rectangle_a = Rectangle {
-        x: rectangle.x,
-        y: rectangle.y,
-        width: rectangle.width - (rectangle.width - split_at + rectangle.x),
-        height: rectangle.height,
+fn split_on_x(square: Square, split_at: f32) -> Vec<Square> {
+    let square_a = Square {
+        x: square.x,
+        y: square.y,
+        width: square.width - (square.width - split_at + square.x),
+        height: square.height,
     };
 
-    let rectangle_b = Rectangle {
+    let square_b = Square {
         x: split_at,
-        y: rectangle.y,
-        width: rectangle.width - split_at + rectangle.x,
-        height: rectangle.height,
+        y: square.y,
+        width: square.width - split_at + square.x,
+        height: square.height,
     };
 
-    vec![rectangle_a, rectangle_b]
+    vec![square_a, square_b]
 }
 
-fn split_on_y(rectangle: Rectangle, split_at: f32) -> Vec<Rectangle> {
-    let rectangle_a = Rectangle {
-        x: rectangle.x,
-        y: rectangle.y,
-        width: rectangle.width,
-        height: rectangle.height - (rectangle.height - split_at + rectangle.y),
+fn split_on_y(square: Square, split_at: f32) -> Vec<Square> {
+    let square_a = Square {
+        x: square.x,
+        y: square.y,
+        width: square.width,
+        height: square.height - (square.height - split_at + square.y),
     };
 
-    let rectangle_b = Rectangle {
-        x: rectangle.x,
+    let square_b = Square {
+        x: square.x,
         y: split_at,
-        width: rectangle.width,
-        height: rectangle.height - split_at + rectangle.y,
+        width: square.width,
+        height: square.height - split_at + square.y,
     };
 
-    vec![rectangle_a, rectangle_b]
+    vec![square_a, square_b]
 }
