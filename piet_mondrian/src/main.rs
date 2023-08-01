@@ -1,7 +1,7 @@
 use nannou::prelude::*;
 use rand::Rng;
 
-const LINE_WIDTH: f32 = 8.0;
+const LINE_WIDTH: f32 = 6.0;
 
 struct Model;
 
@@ -25,9 +25,10 @@ struct Rectangle {
 
 fn view(app: &App, _model: &Model, frame: Frame) {
     let window = app.window_rect();
-    let draw = app.draw();
     let size = window.len();
-    let step = size / 7.0;
+    let draw = app.draw().x_y(-window.w() * 0.41, -window.h() * 0.41);
+
+    let step = size / 6.0;
 
     draw.background().color(WHITE);
 
@@ -46,9 +47,11 @@ fn view(app: &App, _model: &Model, frame: Frame) {
     }
 
     for rectangle in rectangles {
+        println!("{:?}", rectangle);
         draw.rect()
             .no_fill()
-            .x_y(rectangle.x, rectangle.y)
+            .x(rectangle.x)
+            .y(rectangle.y)
             .w_h(rectangle.width, rectangle.height)
             .stroke_weight(LINE_WIDTH)
             .stroke(BLACK);
@@ -61,21 +64,23 @@ fn split_squares_with(x: f32, y: f32, rectangles: &mut Vec<Rectangle>) {
     for i in (0..rectangles.len()).rev() {
         let rectangle = rectangles[i];
         if x > 0.0 && x > rectangle.x && x < rectangle.x + rectangle.width {
-            let rng = rand::thread_rng().gen_range(0.0..1.0);
-            if rng > 0.5 {
-                split_on_x(rectangle, x, rectangles);
-            }
+            // let rng = rand::thread_rng().gen_range(0.0..1.0);
+            // if rng > 0.5 {
+            rectangles.splice(i..i, split_on_x(rectangle, x));
+            rectangles.remove(i + 2);
+            // }
         }
         if y > 0.0 && y > rectangle.y && y < rectangle.y + rectangle.height {
-            let rng = rand::thread_rng().gen_range(0.0..1.0);
-            if rng > 0.5 {
-                split_on_y(rectangle, y, rectangles);
-            }
+            // let rng = rand::thread_rng().gen_range(0.0..1.0);
+            // if rng > 0.5 {
+            rectangles.splice(i..i, split_on_y(rectangle, y));
+            rectangles.remove(i + 2);
+            // }
         }
     }
 }
 
-fn split_on_x(rectangle: Rectangle, split_at: f32, rectangles: &mut Vec<Rectangle>) {
+fn split_on_x(rectangle: Rectangle, split_at: f32) -> Vec<Rectangle> {
     let rectangle_a = Rectangle {
         x: rectangle.x,
         y: rectangle.y,
@@ -90,11 +95,10 @@ fn split_on_x(rectangle: Rectangle, split_at: f32, rectangles: &mut Vec<Rectangl
         height: rectangle.height,
     };
 
-    rectangles.push(rectangle_a);
-    rectangles.push(rectangle_b);
+    vec![rectangle_a, rectangle_b]
 }
 
-fn split_on_y(rectangle: Rectangle, split_at: f32, rectangles: &mut Vec<Rectangle>) {
+fn split_on_y(rectangle: Rectangle, split_at: f32) -> Vec<Rectangle> {
     let rectangle_a = Rectangle {
         x: rectangle.x,
         y: rectangle.y,
@@ -109,6 +113,5 @@ fn split_on_y(rectangle: Rectangle, split_at: f32, rectangles: &mut Vec<Rectangl
         height: rectangle.height - split_at + rectangle.y,
     };
 
-    rectangles.push(rectangle_a);
-    rectangles.push(rectangle_b);
+    vec![rectangle_a, rectangle_b]
 }
