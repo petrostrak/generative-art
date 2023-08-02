@@ -1,10 +1,10 @@
 use nannou::prelude::*;
 
-const SIZE: usize = 320;
-const LINE_WIDTH: f32 = 1.2;
-const WIDTH: u32 = 320;
-const HEIGHT: u32 = 320;
-const STEP: usize = 10;
+const SIZE: usize = 500;
+const LINE_WIDTH: f32 = 2.0;
+const WIDTH: u32 = 500;
+const HEIGHT: u32 = 500;
+const STEP: usize = 15;
 
 struct Model;
 
