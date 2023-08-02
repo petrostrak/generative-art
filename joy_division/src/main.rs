@@ -28,30 +28,19 @@ fn view(app: &App, _model: &Model, frame: Frame) {
     let draw = app.draw().x_y(-window.w() * 0.5, -window.h() * 0.5);
     draw.background().color(SNOW);
 
-    let mut lines = Vec::<Vec<Vec2>>::new();
+    for i in (STEP..=SIZE - STEP).step_by(STEP).skip(5) {
+        let vertices = (STEP..=SIZE - STEP).step_by(STEP).map(|j| {
+            let distance_to_center = (j as f32 - SIZE as f32 / 2.0).abs();
+            let variance = (SIZE as f32 / 2.0 - 50.0 - distance_to_center).max(0.0);
+            let random = random::<f32>();
+            let random = random * variance / 2.0 * -1.0;
+            let point = pt2(j as f32, i as f32 + random);
 
-    for i in (STEP..=SIZE - STEP).step_by(STEP) {
-        let mut line = Vec::<Vec2>::new();
+            println!("POINT OF LINE_{:?}_{:?}", i, point);
+            (pt2(j as f32, i as f32 + random), BLACK)
+        });
 
-        for j in (STEP..=SIZE - STEP).step_by(STEP) {
-            // let distance_to_center = j as f32 - SIZE as f32 / 2.0;
-            // let variance = (SIZE as f32 / 2.0 - 50.0 - distance_to_center).max(0.0);
-            // let random = random::<f32>();
-            // let random = random * variance / 2.0 * -1.0;
-            let point = pt2(j as f32, i as f32);
-            line.push(point);
-        }
-        lines.push(line);
-    }
-
-    for i in 0..lines.len() - 5 {
-        for j in 0..lines[i].len() {
-            draw.line()
-                .start(pt2(lines[i][0].x, lines[i][0].y))
-                .end(pt2(lines[i][j].x, lines[i][j].y))
-                .weight(LINE_WIDTH)
-                .color(BLACK);
-        }
+        draw.polyline().weight(LINE_WIDTH).points_colored(vertices);
     }
 
     draw.to_frame(app, &frame).unwrap();
