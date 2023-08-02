@@ -28,16 +28,28 @@ fn view(app: &App, _model: &Model, frame: Frame) {
     let draw = app.draw().x_y(-window.w() * 0.5, -window.h() * 0.5);
     draw.background().color(SNOW);
 
-    for i in (STEP..=SIZE - STEP).step_by(STEP).skip(5) {
-        let vertices = (STEP..=SIZE - STEP).step_by(STEP).map(|j| {
+    let mut lines = vec![];
+    for i in (STEP..=SIZE - STEP).step_by(STEP) {
+        let mut line = vec![];
+        for j in (STEP..=SIZE - STEP).step_by(STEP) {
             let distance_to_center = (j as f32 - SIZE as f32 / 2.0).abs();
             let variance = (SIZE as f32 / 2.0 - 50.0 - distance_to_center).max(0.0);
             let random = random::<f32>();
             let random = random * variance / 2.0 * -1.0;
             let point = pt2(j as f32, i as f32 + random);
+            line.push(point);
+        }
+        lines.push(line);
+    }
 
-            println!("POINT OF LINE_{:?}_{:?}", i, point);
-            (pt2(j as f32, i as f32 + random), BLACK)
+    for i in 5..lines.len() {
+        let vertices = (0..lines[i].len() - 1).map(|j| {
+            let xc = (lines[i][j].x + lines[i][j + 1].x) / 2.0;
+            let yc = (lines[i][j].y + lines[i][j + 1].y) / 2.0;
+
+            let point = pt2(xc, yc);
+
+            (point, BLACK)
         });
 
         draw.polyline().weight(LINE_WIDTH).points_colored(vertices);
