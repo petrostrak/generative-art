@@ -34,17 +34,17 @@ fn view(app: &App, _model: &Model, frame: Frame) {
         let mut line = Vec::<Vec2>::new();
 
         for j in (STEP..=SIZE - STEP).step_by(STEP) {
-            let distance_to_center = j as f32 - SIZE as f32 / 2.0;
-            let variance = (SIZE as f32 / 2.0 - 50.0 - distance_to_center).max(0.0);
-            let random = random::<f32>();
-            let random = random * variance / 2.0 * -1.0;
-            let point = pt2(j as f32, i as f32 + random);
+            // let distance_to_center = j as f32 - SIZE as f32 / 2.0;
+            // let variance = (SIZE as f32 / 2.0 - 50.0 - distance_to_center).max(0.0);
+            // let random = random::<f32>();
+            // let random = random * variance / 2.0 * -1.0;
+            let point = pt2(j as f32, i as f32);
             line.push(point);
         }
         lines.push(line);
     }
 
-    for i in 0..lines.len() {
+    for i in 0..lines.len() - 5 {
         for j in 0..lines[i].len() {
             draw.line()
                 .start(pt2(lines[i][0].x, lines[i][0].y))
