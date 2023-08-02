@@ -58,7 +58,7 @@ fn view(app: &App, _model: &Model, frame: Frame) {
     let window = app.window_rect();
     let draw = app.draw();
 
-    draw.background().color(WHITE);
+    draw.background().color(SNOW);
 
     let mut circles = Vec::<Circle>::with_capacity(N_CIRCLES);
 
