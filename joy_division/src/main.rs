@@ -35,14 +35,14 @@ fn view(app: &App, _model: &Model, frame: Frame) {
             let distance_to_center = (j as f32 - SIZE as f32 / 2.0).abs();
             let variance = (SIZE as f32 / 2.0 - 50.0 - distance_to_center).max(0.0);
             let random = random::<f32>();
-            let random = random * variance / 2.0 * -1.0;
+            let random = random * variance / 2.0;
             let point = pt2(j as f32, i as f32 + random);
             line.push(point);
         }
         lines.push(line);
     }
 
-    for i in 5..lines.len() {
+    for i in 0..lines.len() - 5 {
         let vertices = (0..lines[i].len() - 1).map(|j| {
             let xc = (lines[i][j].x + lines[i][j + 1].x) / 2.0;
             let yc = (lines[i][j].y + lines[i][j + 1].y) / 2.0;
