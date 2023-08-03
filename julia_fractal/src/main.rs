@@ -34,5 +34,5 @@ fn main() {
         *pixel = Rgb([value, value, value]);
     }
 
-    img.save("julia_fractal.png");
+    img.save("julia_fractal.png").unwrap();
 }
