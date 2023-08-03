@@ -4,6 +4,7 @@ members = [
     "piet_mondrian",
     "cubic_disarray",
     "joy_division",
-    "mandelbrot"
+    "mandelbrot",
+    "tiled_lines"
 ]
 resolver="2"
