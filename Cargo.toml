@@ -3,6 +3,7 @@ members = [
     "circle_packing",
     "piet_mondrian",
     "cubic_disarray",
-    "joy_division"
+    "joy_division",
+    "mandelbrot"
 ]
 resolver="2"
