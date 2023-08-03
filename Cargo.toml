@@ -6,6 +6,7 @@ members = [
     "joy_division",
     "mandelbrot",
     "tiled_lines",
-    "julia_fractal"
+    "julia_fractal",
+    "triangular_mesh",
 ]
-resolver="2"
+resolver = "2"
