@@ -5,6 +5,7 @@ members = [
     "cubic_disarray",
     "joy_division",
     "mandelbrot",
-    "tiled_lines"
+    "tiled_lines",
+    "julia_fractal"
 ]
 resolver="2"
