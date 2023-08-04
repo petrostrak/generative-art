@@ -62,11 +62,10 @@ fn draw_triangle(draw: &Draw, point_a: Dot, point_b: Dot, point_c: Dot) {
     let a = pt2(point_a.x, point_a.y);
     let b = pt2(point_b.x, point_b.y);
     let c = pt2(point_c.x, point_c.y);
-    // let d = pt2(point_a.x, point_a.y);
 
     draw.tri()
-        .no_fill()
+        .gray(random_f32())
         .points(a, b, c)
         .stroke_weight(LINE_WIDTH)
-        .color(BLACK);
+        .stroke_color(BLACK);
 }
