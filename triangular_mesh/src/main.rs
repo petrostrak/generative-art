@@ -1,12 +1,10 @@
 use nannou::prelude::*;
 
-const ROWS: u32 = 16;
-const COLS: u32 = 16;
-const SIZE: u32 = 30;
-const MARGIN: u32 = 35;
-const WIDTH: u32 = COLS * SIZE + 2 * MARGIN;
-const HEIGHT: u32 = ROWS * SIZE + 2 * MARGIN;
-const LINE_WIDTH: f32 = 0.06;
+const SIZE: u32 = 320;
+const WIDTH: u32 = 320;
+const HEIGHT: u32 = 320;
+const LINE_WIDTH: f32 = 2.0;
+const GAP: u32 = SIZE / 8;
 
 fn main() {
     nannou::sketch(view)
@@ -15,39 +13,58 @@ fn main() {
         .run()
 }
 
+#[derive(Clone, Copy)]
 struct Dot {
     x: f32,
     y: f32,
 }
 
 fn view(app: &App, frame: Frame) {
-    let draw = app.draw();
-    let gdraw = draw
-        .scale(SIZE as f32)
-        .scale_y(-1.0)
-        .x_y(COLS as f32 / -2.0 + 0.5, ROWS as f32 / -2.0 + 0.5);
+    let window = app.window_rect();
+    let draw = app.draw().x_y(-window.w() * 0.5, -window.h() * 0.5);
 
     draw.background().color(SNOW);
 
     let mut odd = false;
-    let mut dots = Vec::<Dot>::new();
+    let mut lines = Vec::<Vec<Dot>>::new();
 
-    for y in 0..ROWS {
+    for y in (GAP / 2..=SIZE).step_by(GAP as usize) {
         odd = !odd;
-        for x in 1..COLS {
+        let mut dots = Vec::<Dot>::new();
+        for x in (GAP / 4..=SIZE).step_by(GAP as usize) {
             let dot = Dot {
-                x: x as f32 + (if odd { x as f32 / 2.0 } else { 0.0 }),
+                x: x as f32 + (if odd { GAP as f32 / 2.0 } else { 0.0 }),
                 y: y as f32,
             };
             dots.push(dot);
         }
+        lines.push(dots);
     }
 
-    for dot in dots {
-        let cdraw = gdraw.x_y(dot.x, dot.y);
-
-        cdraw.rect().x_y(dot.x, dot.y).color(BLACK).w_h(0.1, 0.1);
+    for y in 0..lines.len() - 1 {
+        odd = !odd;
+        let mut dot_lines = Vec::<Dot>::new();
+        for i in 0..lines[y].len() {
+            dot_lines.push(if odd { lines[y][i] } else { lines[y + 1][i] });
+            dot_lines.push(if odd { lines[y + 1][i] } else { lines[y][i] });
+        }
+        for i in 0..dot_lines.len() - 2 {
+            draw_triangle(&draw, dot_lines[i], dot_lines[i + 1], dot_lines[i + 2])
+        }
     }
 
     draw.to_frame(app, &frame).unwrap();
+}
+
+fn draw_triangle(draw: &Draw, point_a: Dot, point_b: Dot, point_c: Dot) {
+    let a = pt2(point_a.x, point_a.y);
+    let b = pt2(point_b.x, point_b.y);
+    let c = pt2(point_c.x, point_c.y);
+    // let d = pt2(point_a.x, point_a.y);
+
+    draw.tri()
+        .no_fill()
+        .points(a, b, c)
+        .stroke_weight(LINE_WIDTH)
+        .color(BLACK);
 }
