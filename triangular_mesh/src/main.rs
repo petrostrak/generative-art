@@ -33,8 +33,10 @@ fn view(app: &App, frame: Frame) {
         let mut dots = Vec::<Dot>::new();
         for x in (GAP / 4..=SIZE).step_by(GAP as usize) {
             let dot = Dot {
-                x: x as f32 + (if odd { GAP as f32 / 2.0 } else { 0.0 }),
-                y: y as f32,
+                x: x as f32
+                    + (random_f32() * 0.8 - 0.4) * GAP as f32
+                    + (if odd { GAP as f32 / 2.0 } else { 0.0 }),
+                y: y as f32 + (random_f32() * 0.8 - 0.4) * GAP as f32,
             };
             dots.push(dot);
         }
