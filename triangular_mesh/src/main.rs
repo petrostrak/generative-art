@@ -3,7 +3,7 @@ use nannou::prelude::*;
 const SIZE: u32 = 320;
 const WIDTH: u32 = 320;
 const HEIGHT: u32 = 320;
-const LINE_WIDTH: f32 = 2.0;
+const LINE_WIDTH: f32 = 1.2;
 const GAP: u32 = SIZE / 8;
 
 fn main() {
