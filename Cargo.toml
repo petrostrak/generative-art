@@ -8,5 +8,6 @@ members = [
     "tiled_lines",
     "julia_fractal",
     "triangular_mesh",
+    "hypnotic_squares",
 ]
 resolver = "2"
